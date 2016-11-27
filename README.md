@@ -6,6 +6,7 @@
 
 In my projects I always have an init.R script that I run before all others. It varies based on project but typically looks like this:
 
+```r
 library(statar) # essentially for tab(), which I use quite often for simple tabulations (anything serious is done through dplyr chains with summarize(), so I don't take tab() very seriously -- I think tab()'s creator Matthieu Gomez thinks the same way). There are other useful functions in here, especially tlead tlag and join.
 
 library(magrittr) # for %<>% and %$%, which I use quite often, in spite of being told not too.
@@ -19,7 +20,7 @@ library(ggplot2) # for plotting
 library(dismisc) # this package
 
 setrt("path/to/root/of/project") # use dismisc::setrt to set the project root directory; will be used in all other scripts by setwdrt()
-
+```
 
 # Functions in dismisc
 
@@ -63,8 +64,10 @@ These comments might help people who are trying to figure out how to solve certa
 
 * empty.string.to.NA(). I used to use this a lot so that foreign::write.dta() worked. Instead use df %<>% mutate_all(funs(ifelse(.=="",NA,.))). Proof:
 
+```
 df <- data_frame(x = c("a","b",""), y = 1:3)
 df %>% mutate_all(funs(ifelse(.=="",NA,.)))
+```
 
 * convertsp2.names and convert_2.names. Just do names(df) %<>% str_replace_all(pattern = "[ ]", replacement = ".") etc.
 
