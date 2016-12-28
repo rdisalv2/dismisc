@@ -2,7 +2,8 @@
 
 #' Set working directory, starting from a custom root directory
 #'
-#' Use setrt(dir, name = "") to set a custom root; use setwdrt(dir, name = "") to, roughly-speaking, setwd(paste0(root + name, dir)).
+#' Basic usage: use setrt(dir) to set a custom root; use setwdrt(dir) to, roughly-speaking, setwd(paste0(customRroot, dir)). Advanced usage: use setrt(dir,name = "rootName") to name a custom root;
+#' use setrt(name = "rootName") to switch the primary root to that named custom root; use getrts() to list all available custom roots and their names.
 #'
 #' Best way to use these functions is:
 #'
@@ -28,14 +29,51 @@
 #'
 #' If in calling setrt() no forward slash '/' is given at the end of dir, a forward slash '/' is appended.
 #'
-#' @param dir directory
-#' @param name name of custom root; defaults to what you should consider the current project root
+#' @param dir directory. In setrt if this is NULL, then name must be specified, and setrt makes the primary root the named custom root.
+#' @param name name of custom root; defaults to "", which is the "current project root"
+#' @examples
+#'\dontrun{
+#'
+#' # Basic usage
+#' setrt("~/Dropbox/myproject/") # set the root directory to myproject
+#' setwdrt('data') # set the current working directory to ~/Dropbox/myproject/data/
+#'
+#' # Advanced usage
+#' setrt("~/Dropbox/myproject/",name='main') # create a named custom root, 'main'
+#' setrt("~/Dropbox/old/project/on/which/this/proj/depends/",name='dependsOn') # create a named custom root called 'dependsOn
+#'
+#' setrt(name='main') # now the primary project root is 'main'
+#' setwdrt("data")
+#' # do some work in the ~/Dropbox/myproject/data/ directory...
+#'
+#' setrt(name='dependsOn') # now the primary project root is 'dependsOn'
+#' setwdrt("data")
+#' # do some work in (e.g. get some data from) the ~/Dropbox/old/project/on/which/this/proj/depends/data directory
+#'
+#' getrts() # show all defined custom roots, in this case, 'main' and 'dependsOn'
+#'
+#'}
 #'
 #' @export
-setrt <- function(dir = "~/",name="") {
-  last.char <- stringr::str_split("hello",pattern="")[[1]] %>% .[length(.)]
-  if(last.char!="/") dir <- paste0(dir,'/')
-  options(setNames(object = list(dir),nm = paste0(name,'dismisc_root')))
+setrt <- function(dir = NULL,name="") {
+  library(dplyr)
+  library(stringr)
+  if(!is.null(dir)) { # set custom root
+    last.char <- stringr::str_split(dir,pattern="")[[1]] %>% .[length(.)]
+    if(last.char!="/") dir <- paste0(dir,'/')
+    options(setNames(object = list(dir),nm = paste0(name,'dismisc_root')))
+  } else { # flip custom root
+    if(name=="") {
+      stop("If dir is unspecified, name should be a nonempty string.")
+    } else {
+        # flip custom root to name root
+      if(is.null(getOption(paste0(name,"dismisc_root"),default=NULL))) {
+        stop(paste0('Custom root is not defined.'))
+      } else {
+        options(dismisc_root = getOption(paste0(name,"dismisc_root"),default=NULL))
+      }
+    }
+  }
 }
 
 #' @export
@@ -47,3 +85,17 @@ setwdrt <- function(dir = "", name = "") {
     setwd(paste0(getOption(paste0(name,"dismisc_root"),default=NULL),dir))
   }
 }
+
+#' @export
+#' @rdname setrt
+getrts <- function() {
+  primaryrt <- options()[stringr::str_detect(names(options()),pattern = "(?<!.)dismisc_root")]
+  allrts <- options()[stringr::str_detect(names(options()),pattern = "(?<=.)dismisc_root")]
+  cat(paste0('primary (what setwdrt() refers to) \n\n', primaryrt))
+
+  cat(paste0('\n\nall (what you can access using name="xyz") \n\n',"[name] = [directory]\n", paste0(paste0(stringr::str_replace(names(allrts),"dismisc_root","")," = ", allrts),collapse="\n")))
+}
+
+
+
+

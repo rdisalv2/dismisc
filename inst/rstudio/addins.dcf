@@ -1,0 +1,5 @@
+
+Name: Source() selected source
+Description: Applies source() to selected text in the source pane
+Binding: source_selected_source
+Interactive: false
