@@ -1,6 +1,6 @@
 #' Source() selected source
 #'
-#' Call this function as an addin to source() the selected text in the source pane.
+#' Call this function as an rstudio addin to source() the selected text in the source pane.
 #'
 #' Doing this has advantages and disadvantages relative to ctrl+enter.
 #' The main advantage is that if an error is thrown, then the whole script stops.
@@ -30,4 +30,163 @@ source_selected_source <- function() {
 
   tryCatch(expr = {source(textConnection(selectedText), echo = TRUE)},
            error = function(e) { message(paste0("Error in source:", e)); return() })
+}
+
+
+#' Execute SQLite
+#'
+#' Call this function as an rstudio addin to push to a con with dbExecute
+#'
+#' note that you cannot use double quotes:
+#' http://stackoverflow.com/questions/1992314/what-is-the-difference-between-single-and-double-quotes-in-sql
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dbExecute_selected_sqlite <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  # if selectedText is "", expand it up until you see a semicolon ;
+  # because that's how SQL code works.
+
+  # to do this:
+
+  # old version:
+  # if selectedText is "", expand it to the complete line where the cursor is
+  # this is the default behavior of ctrl+enter
+  # if(selectedText=="") {
+  #   temp$selection[[1]]$range$start[['row']] -> rownum
+  #   temp$contents[[rownum]] -> selectedText
+  # }
+
+  # construct "commandText"
+  commandText = paste0('dbExecute(con,"',selectedText,'")')
+
+    # dbExecute(con,
+    #                       "CREATE TABLE intakesDailyWeather
+    #       AS SELECT intakes.pwsid, intakes.unique_pwsintake_id,intakes.state, schlenker.dateNum, schlenker.tMin, schlenker.tMax, schlenker.prec,
+    #       FROM intakes
+    #       INNER JOIN schlenker
+    #       ON intakes.gridNumber=schlenker.gridNumber")
+
+  tryCatch(expr = {source(textConnection(commandText), echo = TRUE)},
+           error = function(e) { message(paste0("Error in source:", e)); return() })
+}
+
+#' Get query SQLite
+#'
+#' Call this function as an rstudio addin to push to a con with dbGetQuery
+#'
+#' This is useful to e.g. displaying tables.
+#'
+#' note that you cannot use double quotes:
+#' http://stackoverflow.com/questions/1992314/what-is-the-difference-between-single-and-double-quotes-in-sql
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dbGetQuery_selected_sqlite <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  # if selectedText is "", expand it up until you see a semicolon ;
+  # because that's how SQL code works.
+
+  # if selectedText is "", expand it up until you see a semicolon ;
+  # because that's how SQL code works.
+
+  # to do this:
+  # (1) expand to current line. trim whitespace. If it ends with a ;, stop.
+  # (2) expand to next line. trim whitespace if it ends with a ;, stop.
+  # (3) continue until you hit a ;
+  # then, reverse the process --
+  # expand backwards until you hit a ;
+  # then, finally, set cursor position
+  if(selectedText=="") {
+    temp$selection[[1]]$range$start[['row']] -> rownum
+    temp$contents[[rownum]] -> selectedText
+    selectedText <- trimws(selectedText)
+    last_char <- substr(selectedText,start = nchar(selectedText),stop = nchar(selectedText))
+    # expand forward
+    while(last_char != ';' & rownum < length(temp$contents)) {
+      rownum <- rownum + 1
+      temp$contents[[rownum]] -> selectedText_temp
+      selectedText <- paste0(selectedText,'\n',selectedText_temp)
+      selectedText <- trimws(selectedText)
+      last_char <- substr(selectedText,start = nchar(selectedText),stop = nchar(selectedText))
+    }
+    place_to_put_cursor <- rownum+1
+
+    # expand backward
+    temp$selection[[1]]$range$start[['row']] -> rownum
+    rownum <- rownum - 1
+
+    if(rownum>=1) {
+      temp$contents[[rownum]] -> selectedText_temp # this is the previous row
+      selectedText_temp <- trimws(selectedText_temp)
+      last_char <- substr(selectedText_temp,start = nchar(selectedText_temp),stop = nchar(selectedText_temp))
+      while(last_char != ';' & rownum >= 1 & last_char != '') {
+        selectedText <- paste0(selectedText_temp,'\n',selectedText)
+
+        rownum <- rownum - 1
+        if(rownum>=1) {
+          temp$contents[[rownum]] -> selectedText_temp # this is the previous row
+          selectedText_temp <- trimws(selectedText_temp)
+          last_char <- substr(selectedText_temp,start = nchar(selectedText_temp),stop = nchar(selectedText_temp))
+        }
+      }
+    }
+
+    # now advance cursor to rownum + 1
+    rstudioapi::setCursorPosition(c(place_to_put_cursor,1,place_to_put_cursor,1))
+  } else { # in this case, there is some mass to selectedText
+    # because dbGetQuery and dbExecute only allow one command at a time
+    # the approach I take is to tokenize by ; using strsplit
+    # then shove in one at a time
+
+    selectedText <- paste0(unlist(strsplit(selectedText,split = ';',fixed=TRUE)),';')
+
+
+
+  }
+
+
+
+  # old version:
+  # if selectedText is "", expand it to the complete line where the cursor is
+  # this is the default behavior of ctrl+enter
+  # if(selectedText=="") {
+  #   temp$selection[[1]]$range$start[['row']] -> rownum
+  #   temp$contents[[rownum]] -> selectedText
+  # }
+
+  selectedText_charvect <- selectedText
+  for(selectedText in selectedText_charvect) {
+      # final sanitation to avoid needless errors
+      selectedText <- trimws(selectedText)
+      if(selectedText=='' | selectedText==';') next
+
+      # construct "commandText"
+      commandText = paste0('dbGetQuery(con,"',selectedText,'")')
+
+      # run it!
+      tryCatch(expr = {source(textConnection(commandText), echo = TRUE)},
+               error = function(e) { message(paste0("Error in source:", e)); return() })
+  }
+
+
+  # dbExecute(con,
+  #                       "CREATE TABLE intakesDailyWeather
+  #       AS SELECT intakes.pwsid, intakes.unique_pwsintake_id,intakes.state, schlenker.dateNum, schlenker.tMin, schlenker.tMax, schlenker.prec,
+  #       FROM intakes
+  #       INNER JOIN schlenker
+  #       ON intakes.gridNumber=schlenker.gridNumber")
+
 }

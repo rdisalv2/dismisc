@@ -7,7 +7,7 @@
 source_selected_source()
 }
 \description{
-Call this function as an addin to source() the selected text in the source pane.
+Call this function as an rstudio addin to source() the selected text in the source pane.
 }
 \details{
 Doing this has advantages and disadvantages relative to ctrl+enter.

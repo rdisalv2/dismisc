@@ -1,14 +1,17 @@
 
 
-#' Extrapolate and interpolate values
+#' Extrapolate (and interpolate) values
 #'
-#' Uses a spline to extrapolate (and interpolate) values.
+#' Uses a spline or lm to extrapolate (and interpolate) values.
 #'
-#' Use in a dplyr chain something like this to interpolate within city:
+#' Use in a dplyr chain something like this to extrapolate (and interpolate) within city (for example):
 #'
-#' df %<>% group_by(city) %>% mutate_at(total_population,
+#' \code{
+#'
+#' df \%<>\% group_by(city) \%>\% mutate_at(total_population,
 #'
 #'  funs(population_interpolated = dismisc_extrapolate(x=year,y=.)))
+#' }
 #'
 #' If there are no non-missing y values, a vector of NAs is returned.
 #'

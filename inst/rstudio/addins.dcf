@@ -1,3 +1,12 @@
+Name: dbGetQuery() sqlite
+Description: Sends selected text to a sqlite con via dbGetQuery, i.e. returns (displays) query results (if any).
+Binding: dbGetQuery_selected_sqlite
+Interactive: false
+
+Name: dbExecute() sqlite
+Description: Sends selected text to a sqlite con via dbExecute, i.e. does not return query result.
+Binding: dbExecute_selected_sqlite
+Interactive: false
 
 Name: Source() selected source
 Description: Applies source() to selected text in the source pane
