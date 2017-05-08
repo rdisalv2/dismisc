@@ -1,3 +1,8 @@
+Name: Wrap selected lines in dbGetQuery
+Description:
+Binding: wrap_in_dbGetQuery
+Interactive: false
+
 Name: dbGetQuery() sqlite
 Description: Sends selected text to a sqlite con via dbGetQuery, i.e. returns (displays) query results (if any).
 Binding: dbGetQuery_selected_sqlite

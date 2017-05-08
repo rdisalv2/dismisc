@@ -190,3 +190,38 @@ dbGetQuery_selected_sqlite <- function() {
   #       ON intakes.gridNumber=schlenker.gridNumber")
 
 }
+
+
+#' Wrap select lines in dbGetQuery(con,...)
+#'
+#' @return
+#' @export
+#'
+#' @examples
+wrap_in_dbGetQuery <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  # break up selectedText by ;
+  selectedText <- paste0(unlist(strsplit(selectedText,split = ';',fixed=TRUE)),';')
+
+  output <- c()
+  selectedText_charvect <- selectedText
+  for(selectedText in selectedText_charvect) {
+    # final sanitation to avoid needless errors
+    selectedText <- trimws(selectedText)
+    if(selectedText=='' | selectedText==';') next
+
+    # construct "commandText"
+    commandText = paste0('dbGetQuery(con,"',selectedText,'")')
+
+    output <- c(output,commandText)
+
+  }
+  output <- paste0(output,collapse='\n')
+  cat(output)
+  rstudioapi::sendToConsole(output,execute=FALSE)
+}
+
