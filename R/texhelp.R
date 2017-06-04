@@ -14,6 +14,8 @@
 #'
 #' t_sd ("texhelp significant digits") returns a character vector version of x so that there are exactly d significant digits shown. Trailing zeroes are added as needed, to make the point that there are actually d significant digits.
 #'
+#' (In most cases you will want to use t_td in order to force a list of numbers to have the same number of trailing digits -- this looks better.)
+#'
 #' In both functions, commas are added where necessary; turn off with commas=FALSE.
 #'
 #' The except parameter is included to make it painless to deal with the common case of an identifying column for which you do not want trailing digits.
@@ -22,7 +24,7 @@
 #' @export
 #'
 #' @examples
-#' t_td(c(1.231, 1.8764, 1543.999,1532.987),d=2)
+#' t_td(c(123.2,1.231, 1.8764, 1543.999,1532.987),d=2)
 #' t_sd(c(2342.232,232.213,323.23,0.99999),d=2)
 t_td <- function(x,d=0,commas=TRUE,except=c()) {
   library(stringr)
@@ -40,8 +42,8 @@ t_td <- function(x,d=0,commas=TRUE,except=c()) {
   bf.dec.points <- str_length(str_replace_all(str_split_fixed(R2(x),"[.]",n=2)[1],pattern='-',replacement=''))
   af.dec.points <- str_length(str_split_fixed(R2(x),"[.]",n=2)[2])
 
-  # number to show after decimal point
-  traildigits <- d - bf.dec.points
+  # number to add after decimal point
+  traildigits <- d - af.dec.points
   if(traildigits<0) traildigits = 0
   toret <- formatC(R2(x),digits = traildigits, format = 'f',big.mark=ifelse(commas,',',''))
   toret[except] <- as.character(x_old)[except]
