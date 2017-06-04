@@ -20,4 +20,3 @@ list of successfully downloaded destfile names
 \description{
 Download all files in a list of URLs into the working directory
 }
-

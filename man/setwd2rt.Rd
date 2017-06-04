@@ -33,4 +33,3 @@ Best way to use this function
    \item{every collaborator working on your project (e.g. synced via dropbox) should have his/her own init-collaborator-name.R file. This allows different collaborators to have different directory structures.}
 }
 }
-

@@ -27,4 +27,3 @@ A (package R.rsp based) implementation of a ThreePartTable. ThreePartTable is a 
 The source code for this "R.rsp template" can be copied and pasted to make new functions to produce latex tables, depending on journal requirements.
 (If the parameters remain essentially the same, transitioning from one latex table format to another should be relatively painless.)
 }
-

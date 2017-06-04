@@ -9,4 +9,3 @@ wrap_in_dbGetQuery()
 \description{
 Wrap select lines in dbGetQuery(con,...)
 }
-

@@ -18,4 +18,3 @@ returns a subvector containing all entries that will go to NA when you as.numeri
 \note{
 It might be just as easy to do x %>% .[is.na(as.numeric(x))].
 }
-

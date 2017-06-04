@@ -15,4 +15,3 @@ This is useful to e.g. displaying tables.
 note that you cannot use double quotes:
 http://stackoverflow.com/questions/1992314/what-is-the-difference-between-single-and-double-quotes-in-sql
 }
-

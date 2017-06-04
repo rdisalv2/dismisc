@@ -13,4 +13,3 @@ Call this function as an rstudio addin to push to a con with dbExecute
 note that you cannot use double quotes:
 http://stackoverflow.com/questions/1992314/what-is-the-difference-between-single-and-double-quotes-in-sql
 }
-

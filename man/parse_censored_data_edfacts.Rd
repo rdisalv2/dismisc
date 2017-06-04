@@ -41,4 +41,3 @@ Given a character vector, this function returns a numeric vector that:
 \note{
 The name of the function will hopefully prevent conflicts with other packages but the method is probably more general than edfacts data.
 }
-

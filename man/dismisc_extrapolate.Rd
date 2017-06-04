@@ -33,4 +33,3 @@ funs(population_interpolated = dismisc_extrapolate(x=year,y=.)))
 
 If there are no non-missing y values, a vector of NAs is returned.
 }
-

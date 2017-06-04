@@ -30,4 +30,3 @@ You will commonly want to use mdbexportArgs = '-D\%m/\%d/\%Y' to get the dates r
 
 you may also be interested in the common idiom, col_types = cols(.default = col_character()), which tells read_csv to read in all columns as characters. This is guaranteed to avoid parsing failures at the read_csv step.
 }
-

@@ -16,4 +16,3 @@ df with labels removed
 e.g. after using a function in Hmisc that tacks on labels, or
 haven::read_dta()
 }
-
