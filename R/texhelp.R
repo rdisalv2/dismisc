@@ -33,19 +33,20 @@ t_td <- function(x,d=0,commas=TRUE,except=c()) {
   x[except] <- 0
   x <- as.numeric(x)
 
-  d <- d + 1
-  R2 <- function(x) {
-    round(x,digits=d)
-  }
+  # d <- d + 1
+  # R2 <- function(x) {
+  #   round(x,digits=d)
+  # }
+  x_rounded <- round(x,digits=d)
 
   # the numbers before & after decimal points BEFORE correction are:
-  bf.dec.points <- str_length(str_replace_all(str_split_fixed(R2(x),"[.]",n=2)[1],pattern='-',replacement=''))
-  af.dec.points <- str_length(str_split_fixed(R2(x),"[.]",n=2)[2])
+  # bf.dec.points <- str_length(str_replace_all(str_split_fixed(R2(x),"[.]",n=2)[1],pattern='-',replacement=''))
+  # af.dec.points <- str_length(str_split_fixed(x_rounded,"[.]",n=2)[2])
 
   # number to add after decimal point
-  traildigits <- d - af.dec.points
-  if(traildigits<0) traildigits = 0
-  toret <- formatC(R2(x),digits = traildigits, format = 'f',big.mark=ifelse(commas,',',''))
+  # traildigits <- d - af.dec.points - 1
+  # if(traildigits<0) traildigits = 0
+  toret <- formatC(x_rounded,digits = d, format = 'f',big.mark=ifelse(commas,',',''))
   toret[except] <- as.character(x_old)[except]
   return(toret)
 }
