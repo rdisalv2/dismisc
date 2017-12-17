@@ -17,3 +17,25 @@ Name: Source() selected source
 Description: Applies source() to selected text in the source pane
 Binding: source_selected_source
 Interactive: false
+
+Name: do lines in stata do file
+Description: Sends to terminal pane using a temporary do file
+Binding: do_stata
+Interactive: false
+
+Name: send stata lines to terminal
+Description: Sends to terminal pane l-by-l
+Binding: do_lbyl_stata
+Interactive: false
+
+Name: send python lines to terminal
+Description: Sends to terminal pane l-by-l
+Binding: do_lbyl_python
+Interactive: false
+
+Name: run python code
+Description: run python code
+Binding: run_python
+Interactive: false
+
+

@@ -225,3 +225,233 @@ wrap_in_dbGetQuery <- function() {
   rstudioapi::sendToConsole(output,execute=FALSE)
 }
 
+
+
+
+#' send stata code to terminal via temporary do file
+#'
+#' @return
+#' @export
+#'
+#' @examples
+do_stata <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  # create tempfile
+  tfile <- tempfile(fileext = '.do')
+
+  # write to tfile
+  writeLines(selectedText,tfile)
+
+  # send to console
+  print(paste0('do "',tfile,'"'))
+
+  # send to terminal
+  # print(rstudioapi::terminalList())
+  visiterm <- rstudioapi::terminalVisible()
+  print(visiterm)
+  rstudioapi::terminalSend(id = visiterm, text = paste0('do "',tfile,'"'))
+  rstudioapi::terminalSend(id = visiterm, text='\n')
+  # rstudioapi::terminalSend()
+
+
+
+  # capture text, send to console
+  # print(paste0(readLines(con = tfile),collapse='\n'))
+
+
+  # print(selectedText)
+}
+
+
+
+#' send stata code line-by-line
+#'
+#' Automatically strips // from selected code
+#'
+#' @return
+#' @export
+#'
+#' @examples
+do_lbyl_stata <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  selectedText <- strsplit(selectedText,'\n')[[1]]
+  print('before -----------------')
+  print(selectedText)
+
+  # #single line comment flag
+  # sing_line <- 0
+  # #multi line comment flag
+  # mult_line <- 0
+  # # iterate over characters in selectedText
+  #
+  # # print(selectedText)
+  # selectedText <- strsplit(selectedText,split = '')[[1]]
+  # print(selectedText)
+  #
+  # newText <- ''
+  # for(ii in 1:nchar(selectedText)) {
+  #   k <- selectedText[ii]
+  #   if(k=='*')
+  #
+  #   newText <- paste0(newText,k)
+  #
+  # }
+
+
+  # # print(temp)
+  # temp[1] <- ifelse(is.na(temp[1]),'',temp[1])
+  # selectedText[ii] <- temp[1]
+  #
+  #
+  # # strip *,  // and /* */ sections
+  #
+  # strip //'s
+  for(ii in 1:length(selectedText)) {
+    # print(selectedText[ii])
+    # print(class(selectedText[ii]))
+    temp <- strsplit(selectedText[ii],split = '//',fixed = TRUE)[[1]]
+
+    # print(temp)
+    temp[1] <- ifelse(is.na(temp[1]),'',temp[1])
+    selectedText[ii] <- temp[1]
+  }
+  # strip *'s
+  for(ii in 1:length(selectedText)) {
+    # print(selectedText[ii])
+    # print(class(selectedText[ii]))
+    temp <- stringr::str_trim(selectedText[ii])
+    temp <- ifelse(stringr::str_sub(temp,1,1)=='*','',temp)
+    selectedText[ii] <- temp
+  }
+  #
+  # # strip /* */'s
+  # b/c these can be multiline need to create an iterator
+  # #multi line comment flag
+  mult_line <- 'none'
+  newText <- ''
+  selectedText <- paste0(selectedText,collapse='\n')
+  selectedText <- strsplit(selectedText,'')[[1]]
+  for(ii in 1:length(selectedText)) {
+    k <- selectedText[ii]
+    if(ii<length(selectedText)) j <- selectedText[ii+1]
+    else j <- 'END OF LINE'
+    if(mult_line == 'none') {
+      if(k=='/' & j == '*') mult_line <- 'erase'
+    }
+    if(mult_line == 'erase') {
+      if(k=='*' & j=='/') multi_line = "none"
+    }
+
+    if(mult_line == 'none') newText <- paste0(newText,k)
+  }
+
+
+  print('after ---------------------')
+  cat(newText)
+
+  # send to terminal
+  # print(rstudioapi::terminalList())
+  visiterm <- rstudioapi::terminalVisible()
+  print(visiterm)
+  rstudioapi::terminalSend(id = visiterm, text = newText)
+  rstudioapi::terminalSend(id = visiterm, text='\n')
+
+}
+
+
+
+
+#' send python code line-by-line
+#'
+#' Automatically strips # from selected code
+#'
+#' @return
+#' @export
+#'
+#' @examples
+do_lbyl_python <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  selectedText <- strsplit(selectedText,'\n')[[1]]
+  print('before -----------------')
+  print(selectedText)
+
+  # strip #'s
+  for(ii in 1:length(selectedText)) {
+
+    temp <- strsplit(selectedText[ii],split = '#',fixed = TRUE)[[1]]
+
+    temp[1] <- ifelse(is.na(temp[1]),'',temp[1])
+    selectedText[ii] <- temp[1]
+  }
+
+  # send to terminal
+  # print(rstudioapi::terminalList())
+  # visiterm <- rstudioapi::terminalVisible()
+  # print(visiterm)
+  # rstudioapi::terminalSend(id = visiterm, text = newText)
+  # rstudioapi::terminalSend(id = visiterm, text='\n')
+  visiterm <- rstudioapi::terminalVisible()
+  # print(visiterm)
+
+  print('after ---------------')
+  print(selectedText)
+
+  for(ss in selectedText) {
+    if(stringr::str_trim(ss)=='') next
+    print(paste0('SENDING = ',ss))
+    rstudioapi::terminalSend(id = visiterm, text = ss)
+    rstudioapi::terminalSend(id = visiterm, text = '\n')
+    # print(ss)
+    # print('\n')
+  }
+  # rstudioapi::termin
+
+  rstudioapi::terminalSend(id = visiterm,
+                           text = paste0('%run "', , '"'))
+
+
+}
+
+
+
+
+#' run python code using %run
+#' @return
+#' @export
+#'
+#' @examples
+run_python <- function() {
+  # get selected text in the source pane
+  rstudioapi::getSourceEditorContext() -> temp
+
+  temp$selection[[1]]$text -> selectedText
+
+  # save to an ipy file
+  tfile <- tempfile(fileext = '.ipy')
+
+  # write to tfile
+  writeLines(selectedText,tfile)
+
+  visiterm <- rstudioapi::terminalVisible()
+
+  rstudioapi::terminalSend(id = visiterm, text = paste0('%run ',tfile))
+  rstudioapi::terminalSend(id = visiterm, text = '\n')
+
+}
+
+
+
+
+

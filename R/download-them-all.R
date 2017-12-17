@@ -8,7 +8,7 @@
 #' @return list of successfully downloaded destfile names
 #' @export
 
-download_them_all <- function(url.vect, skip.already.downloaded = TRUE,stub.vect = rep("",length(linkvect))) {
+download_them_all <- function(url.vect, skip.already.downloaded = TRUE,stub.vect = rep("",length(url.vect))) {
   destfilenames <- list()
   ii <- 0
   for(link in url.vect) {
