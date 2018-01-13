@@ -20,12 +20,12 @@ download_them_all <- function(url.vect, skip.already.downloaded = TRUE,stub.vect
     if(skip.already.downloaded) {
       if(file.exists(temp.name)) {
         ii <- ii+1
-        print(paste0("download_them_all: skipping ",ii," of ",length(link.vect)," destfile = ",temp.name))
+        print(paste0("download_them_all: skipping ",ii," of ",length(url.vect)," destfile = ",temp.name))
         next
       }
     }
     ii <- ii+1
-    print(paste0("download_them_all: downloading ",ii," of ",length(link.vect)," destfile = ",paste0(stub.vect[ii],temp.name)))
+    print(paste0("download_them_all: downloading ",ii," of ",length(url.vect)," destfile = ",paste0(stub.vect[ii],temp.name)))
     tryCatch({
       download.file(url=link,
                   destfile=paste0(stub.vect[ii],temp.name),
