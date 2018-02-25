@@ -1,4 +1,5 @@
 
+
 #' Download all files in a list of URLs into the working directory
 #'
 #' @param url.vect vector of URLs. Files downloaded will be named according to part of the URL after the last forward slash '/'.
@@ -35,3 +36,33 @@ download_them_all <- function(url.vect, skip.already.downloaded = TRUE,stub.vect
   }
   return(destfilenames)
 }
+
+
+
+
+
+#' Read in and stack a vector of data frames
+#'
+#' Read in a vector of files, that become data frames, stacking them together with bind_rows() the most memory-efficient way possible.
+#'
+#' @param flist Character vector of files (in current working directory)
+#' @param readfnc Function to use to read in the files in the list (default is readRDS)
+#' @param verbose Print a message on each iteration
+#' @param ... additional parameters passed to readfnc
+#'
+#' @return The bind_row()ed dataset
+#' @export
+read_stack <- function(flist,readfnc=readRDS,verbose=FALSE,...) {
+
+  dout <- vector('list',length=length(flist))
+  iter <- 1
+  for(ff in flist) {
+    readfnc(ff,...) -> temp
+    dout[[iter]] <- temp
+    iter <- iter +1
+    if(verbose) message(paste0('done reading ',ff))
+  }
+  dout %<>% bind_rows(.)
+  dout
+}
+
