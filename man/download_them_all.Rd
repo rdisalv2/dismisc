@@ -5,7 +5,7 @@
 \title{Download all files in a list of URLs into the working directory}
 \usage{
 download_them_all(url.vect, skip.already.downloaded = TRUE,
-  stub.vect = rep("", length(linkvect)))
+  stub.vect = rep("", length(url.vect)))
 }
 \arguments{
 \item{url.vect}{vector of URLs. Files downloaded will be named according to part of the URL after the last forward slash '/'.}
