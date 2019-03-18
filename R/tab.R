@@ -9,7 +9,7 @@
 tab <- function(x, ...) {
   xname <- deparse(substitute(x))
   xsym <- as.name(xname)
-  if(is.vector(x)) {
+  if(is.vector(x) | is.factor(x)) {
     x <- data.frame(x)
     names(x) <- xname
     statar::tab(x,!!xsym)
