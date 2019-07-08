@@ -4,7 +4,8 @@
 \alias{TexHelp_threePartTable}
 \title{TexHelp ThreePartTable}
 \usage{
-TexHelp_threePartTable(topCaption, label, innerContents, notes, columnAlign)
+TexHelp_threePartTable(topCaption, label, innerContents, notes,
+  columnAlign)
 }
 \arguments{
 \item{topCaption}{The caption at the top of the table}

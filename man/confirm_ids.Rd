@@ -4,7 +4,7 @@
 \alias{confirm_ids}
 \title{Confirm if the rows of data are uniquely identified by cols}
 \usage{
-confirm_ids(data, cols)
+confirm_ids(data, ..., .dots = NULL, .raise_error = TRUE)
 }
 \arguments{
 \item{data}{data.frame to check}

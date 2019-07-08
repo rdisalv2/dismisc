@@ -4,7 +4,8 @@
 \alias{confirm_join}
 \title{Confirm if two datasets will join properly (before calling some dplyr join function)}
 \usage{
-confirm_join(x, y, by = NULL, how = "1:1")
+confirm_join(x, y, by = NULL, by.x = NULL, by.y = NULL,
+  how = "1:1")
 }
 \arguments{
 \item{x}{Same as left_join}
