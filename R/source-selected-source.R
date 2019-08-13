@@ -427,7 +427,7 @@ do_lbyl_python <- function() {
 
 
 
-#' run python code using %run
+#' run python code using \%run
 #' @return
 #' @export
 #'
