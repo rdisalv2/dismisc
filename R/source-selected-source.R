@@ -419,7 +419,7 @@ do_lbyl_python <- function() {
   # rstudioapi::termin
 
   rstudioapi::terminalSend(id = visiterm,
-                           text = paste0('%run "', , '"'))
+                           text = paste0('%run "', '"'))
 
 
 }
@@ -427,29 +427,6 @@ do_lbyl_python <- function() {
 
 
 
-#' run python code using \%run
-#' @return
-#' @export
-#'
-#' @examples
-run_python <- function() {
-  # get selected text in the source pane
-  rstudioapi::getSourceEditorContext() -> temp
-
-  temp$selection[[1]]$text -> selectedText
-
-  # save to an ipy file
-  tfile <- tempfile(fileext = '.ipy')
-
-  # write to tfile
-  writeLines(selectedText,tfile)
-
-  visiterm <- rstudioapi::terminalVisible()
-
-  rstudioapi::terminalSend(id = visiterm, text = paste0('%run ',tfile))
-  rstudioapi::terminalSend(id = visiterm, text = '\n')
-
-}
 
 
 
