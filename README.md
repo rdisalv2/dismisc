@@ -1,38 +1,43 @@
-# dismisc: miscellaenous R functions
+# dismisc: misc R functions
 
 
 # Guidance
 
 
-In my projects I always have an init.R script that I run before all others. It varies based on project but typically looks like this:
+In my projects I always have an init.R script that I run before all others. It varies based on project but typically looks something like this:
 
 ```r
-library(statar) # essentially for tab(), which I use quite often for simple tabulations (anything serious is done through dplyr chains with summarize(), so I don't take tab() very seriously -- I think tab()'s creator Matthieu Gomez thinks the same way). There are other useful functions in here, especially tlead tlag and join.
-
-library(magrittr) # for %<>% and %$%, which I use quite often, in spite of being told not too.
-library(purrr) # for the map functions and safely()
+library(magrittr) # for %<>% and %$%
 library(dplyr) # the main workhorse
 library(readr)
 library(stringr)
-library(reshape2) # I still use reshape2::melt and reshape2::dcast, although I've seen people using tidyr::gather and tidyr::spread for the same purpose. One of my goals is to switch to tidyr, but it is hard since reshape2 is already very intuitive.
-library(ggplot2) # for plotting
+library(reshape2)
+library(ggplot2)
+# ... etc
+
 
 library(dismisc) # this package
 
-setrt("path/to/root/of/project") # use dismisc::setrt to set the project root directory; will be used in all other scripts by setwdrt()
+.rt_scratch <- "/path/to/scratch/directory/"
+.rt_proj <- '"/path/to/proj/directory/" 
+.rt_data <- '"/path/to/data/directory/" 
+.rt_scripts <- '"/path/to/scripts/directory/" 
+
 ```
 
 # Functions in dismisc
 
 ## setrt() and setwdrt()
 
-These functions allow you to pretend to have a different root directory. This is useful for projects on multiple computers with different directory structures.
-
-The way this works: setrt stores a global option in dismisc_root. Then, roughly-speaking, setwdrt(x) calls setwd(paste0(dismisc_root,x)).
-
-Projects can have multiple roots, which can be used like paths to dependencies. See ?setrt for details.
+Note: these are obsolete though kept for running old code. It's better to use hidden objects, like .rt_scratch <- "/path/to/scratch/directory/" etc.
 
 ## Misc functions
+
+* tlag, tlead - taken from https://github.com/matthieugomez/statar, lead/lag by a time variable
+
+* tab - as tab from stata, but only works for vectors
+
+* su_up - as su from stata, but only works for vectors
 
 * clear_all_labels(df) - removes all labels from the columns of the dataframe df (there may be a better way)
 

@@ -2,18 +2,29 @@
 % Please edit documentation in R/tab.R
 \name{tab}
 \alias{tab}
-\title{wrapper for statar::tab, to handle vector input}
+\title{like tab from statar, but ONLY works for vectors}
 \usage{
-tab(x, ...)
+tab(x, sf = TRUE, sv = FALSE, ss = 10, sort_freq = sf,
+  sort_values = sv, suppress_small = ss)
 }
 \arguments{
-\item{x}{Either a vector or a data.frame}
+\item{x}{A vector}
 
-\item{...}{if x is a data.frame, then a list of variables to tab}
+\item{sf}{shorthand for sort_freq}
+
+\item{sv}{shorthand for sort_values}
+
+\item{ss}{shorthand for suppress_small}
+
+\item{sort_freq}{sort by frequency large to small.}
+
+\item{sort_values}{sort by values large to small. overrides sort_freq.}
+
+\item{suppress_small}{suppresses beyond this many levels for printing. only applies if sort_freq=TRUE. default 10. set to FALSE or Inf to not suppress.}
 }
 \value{
-See ?statar::tab
+a data.frame with the tabulation
 }
 \description{
-wrapper for statar::tab, to handle vector input
+From https://github.com/matthieugomez/statar/ with significant modifications
 }
