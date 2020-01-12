@@ -41,16 +41,19 @@ tab <- function(x, sf = TRUE, sv = FALSE, ss = 10, sort_freq = sf, sort_values =
     Cum. = cumsum(Percent)
   )
 
+  didsuppress <- 0
+  thetabletoprint <- thetable
   if(sort_freq) { # only suppress small if sort_values
     if(suppress_small!=FALSE & suppress_small!=0 & is.finite(suppress_small)) {
       didsuppress <- nrow(thetable)-suppress_small
       thetabletoprint <- thetable %>% slice(max(1,(nrow(thetable) - suppress_small + 1)):nrow(thetable))
-      thetabletoprint <- thetabletoprint %>% mutate(
-        Freq. = dismisc::t_td(Freq.,0),
-        Percent = dismisc::t_td(Percent,2),
-        Cum. = dismisc::t_td(Cum.,2)
-      )
     }
+
+  thetabletoprint <- thetabletoprint %>% mutate(
+    Freq. = dismisc::t_td(Freq.,0),
+    Percent = dismisc::t_td(Percent,2),
+    Cum. = dismisc::t_td(Cum.,2)
+  )
 
     if(didsuppress>1) {
       suppressedrows <- thetable %>% slice(-(max(1,(nrow(thetable)-suppress_small + 1)):nrow(thetable)))
@@ -82,9 +85,10 @@ tab <- function(x, sf = TRUE, sv = FALSE, ss = 10, sort_freq = sf, sort_values =
 #' @return nothing (prints summary output)
 #' @export
 suup <- function(x) {
-  cat(sprintf('Obs %s   Missing %s   Mean %s   Median %s   StdDev %s \n',t_td(length(x),0), t_td(sum(is.na(x)),0), round(mean(x),3), round(median(x),3), round(sd(x),3)))
-  cat('\n')
-  print(quantile(x,c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1)))
+  cat(sprintf('Obs %s | NAs %s | Mean %s | Median %s | StdDev %s \n',t_td(length(x),0), t_td(sum(is.na(x)),0), round(mean(x,na.rm=TRUE),3), round(median(x,na.rm=TRUE),3), round(sd(x,na.rm=TRUE),3)))
+  cat('Quantiles\n')
+  print(quantile(x,c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1),na.rm=TRUE))
+  if(any(is.na(x))) cat('Note: NAs excluded from summstats.')
 }
 
 
