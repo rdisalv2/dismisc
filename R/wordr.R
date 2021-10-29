@@ -36,10 +36,11 @@ addPlots2 <- function (docxIn, docxOut, Plots = list(), width = 6, height = 6,
 #'
 #' @param out A dataframe, columns need to be C1-CN, actual headers in first row.
 #' @param nblankheaders The number of columns without parentheses numbers over them; default 1.
+#' @param boldheaders The headers will be automatically bold
 #'
 #' @return
 #' @export
-flextable_convert_standard <- function(out,nblankheaders=1) {
+flextable_convert_standard <- function(out,nblankheaders=1, boldheaders = TRUE) {
   ft_out <- flextable(out,cwidth=1)
 
   f <- function(...) {
